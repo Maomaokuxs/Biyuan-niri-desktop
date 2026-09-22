@@ -23,12 +23,18 @@ moved=0
 for mod in $MODULES; do
     [[ -d "$SRC/$mod" ]] || { echo "跳过缺失模块: $mod"; continue; }
     # 预处理冲突：目标已存在且不是指向源的链接，先搬进备份
+    # 注意 stow 会做目录折叠（目标父目录本身可能是链接），所以用
+    # readlink -f 比较最终指向，而不是只判断目标本身是否为链接
     while IFS= read -r -d '' src_file; do
         rel="${src_file#$SRC/$mod/}"
         target="$HOME/$rel"
-        if [[ -e "$target" || -L "$target" ]]; then
-            if [[ -L "$target" && "$(readlink -f "$target")" == "$src_file" ]]; then
-                continue  # 已正确链接，无需处理
+        if [[ -L "$target" && ! -e "$target" ]]; then
+            rm "$target"  # 断裂链接无内容，直接清除让 stow 重建
+            continue
+        fi
+        if [[ -e "$target" ]]; then
+            if [[ "$(readlink -f "$target")" == "$src_file" ]]; then
+                continue  # 已正确链接（文件链接或目录折叠），无需处理
             fi
             mkdir -p "$BACKUP/$(dirname "$rel")"
             mv "$target" "$BACKUP/$rel"
