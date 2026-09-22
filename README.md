@@ -13,7 +13,7 @@ sudo dnf copr enable -y biyuan/software       # 本配置包 + hellwal/waypaper
 # 2. 安装桌面元包（会自动拉上 niri、quickshell、waybar、kitty……）
 sudo dnf install -y biyuan-niri-desktop
 
-# 3. 部署配置到家目录（已有文件先备份到 ~/.config-backup-<时间> 再覆盖）
+# 3. 部署配置到家目录（已有文件先备份到 ~/.config/by-mgr/backup/<时间> 再覆盖）
 biyuan-niri-deploy
 
 # 4. 注销，在登录管理器选择 niri 会话进入
