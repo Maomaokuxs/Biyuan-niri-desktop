@@ -1,0 +1,82 @@
+/* 引入全局动态调色板 */
+@import "~/.cache/by-mgr/hellwal/color-rofi.rasi"
+
+* {
+    background-color: transparent;
+    text-color: @fg;
+    margin: 0;
+    padding: 0;
+    spacing: 0;
+    font: "JetBrainsMono Nerd Font 12"; 
+}
+
+/* ==========================================
+ * 1. 窗口层：100% 宽度，贴紧顶部
+ * ========================================== */
+window {
+    anchor:     north;
+    location:   north;
+    width:      100%;
+    y-offset:   0px; 
+    
+    background-color: @bg;
+    border:     0px 0px 2px 0px;
+    border-color: @accent;
+    padding:    0px;
+}
+
+/* ==========================================
+ * 2. 主容器：水平排列
+ * ========================================== */
+mainbox {
+    orientation: horizontal;
+    background-color: @bg;
+    children:   [ inputbar, listview ];
+}
+
+/* ==========================================
+ * 3. 左侧区域 (系统信息)：59% 宽度（eDP 1706/ HDMI 1920 均使关机贴右）
+ * ========================================== */
+inputbar {
+    width:      59%;
+    padding:    5px 10px;
+    children:   [ prompt ];
+}
+
+prompt {
+    vertical-align: 0.5;
+    text-color:     @accent;
+    font:           "JetBrainsMono Nerd Font Bold 11";
+}
+
+/* ==========================================
+ * 4. 右侧区域 (电源控件)：41% 精确容纳 6 按钮（eDP 1706 需 697px/41%）
+ * ========================================== */
+listview {
+    width:      41%;
+    layout:     horizontal;
+    spacing:    4px;      
+    padding:    5px 2px;  
+    lines:      6;
+    scrollbar:  false;
+    cycle:      false;
+}
+
+/* 单个按钮的外观 */
+element {
+    padding:        0px 8px;
+    border-radius:  4px;
+    text-color:     @fg;
+    cursor:         pointer;
+}
+
+element selected {
+    background-color: @accent;
+    text-color:       @bg;
+}
+
+element-text {
+    vertical-align:   0.5;
+    horizontal-align: 0.5;
+    text-color:       inherit;
+}

@@ -1,0 +1,56 @@
+#!/bin/bash
+# biyuan-niri-deploy — 把 Biyuan niri 桌面配置部署到 $HOME
+# 策略：已有文件先备份到 ~/.config-backup-<时间>，再用 stow 软链接覆盖
+# 用法：biyuan-niri-deploy [--yes]
+set -euo pipefail
+
+SRC="${BIYUAN_NIRI_SRC:-/usr/share/biyuan-niri-desktop/dotfiles}"
+WALL_SRC="${BIYUAN_NIRI_WALLPAPERS:-/usr/share/biyuan-niri-desktop/wallpapers}"
+MODULES="niri quickshell waybar mako rofi kitty fastfetch starship waypaper hypr xdg-desktop-portal"
+
+if [[ ! -d "$SRC" ]]; then
+    echo "错误：找不到配置源 $SRC（请先安装 biyuan-niri-config）" >&2
+    exit 1
+fi
+if ! command -v stow &>/dev/null; then
+    echo "错误：需要 stow，请先 sudo dnf install stow" >&2
+    exit 1
+fi
+
+BACKUP="$HOME/.config-backup-$(date +%Y%m%d_%H%M%S)"
+moved=0
+
+for mod in $MODULES; do
+    [[ -d "$SRC/$mod" ]] || { echo "跳过缺失模块: $mod"; continue; }
+    # 预处理冲突：目标已存在且不是指向源的链接，先搬进备份
+    while IFS= read -r -d '' src_file; do
+        rel="${src_file#$SRC/$mod/}"
+        target="$HOME/$rel"
+        if [[ -e "$target" || -L "$target" ]]; then
+            if [[ -L "$target" && "$(readlink -f "$target")" == "$src_file" ]]; then
+                continue  # 已正确链接，无需处理
+            fi
+            mkdir -p "$BACKUP/$(dirname "$rel")"
+            mv "$target" "$BACKUP/$rel"
+            moved=$((moved + 1))
+        fi
+    done < <(find "$SRC/$mod" -type f -print0)
+    stow -d "$SRC" -t "$HOME" "$mod"
+    echo "已部署模块: $mod"
+done
+
+# 壁纸：软链接到 ~/Pictures/wallpapers（init-wallpaper 首次启动也会做，这里先行）
+if [[ -d "$WALL_SRC" ]]; then
+    mkdir -p "$HOME/Pictures/wallpapers"
+    ln -sf "$WALL_SRC"/* "$HOME/Pictures/wallpapers/"
+    echo "壁纸已链接到 ~/Pictures/wallpapers/"
+fi
+
+echo
+if [[ "$moved" -gt 0 ]]; then
+    echo "原有 $moved 个文件已备份到: $BACKUP"
+else
+    echo "无冲突文件，未产生备份。"
+fi
+echo "完成。注销后在登录管理器选择 niri 会话进入即可。"
+echo "（首次进入会自动执行壁纸初始化与配色同步）"

@@ -1,0 +1,24 @@
+background-color=#f9f3f1
+text-color=#6a442f
+border-color=#998c8c
+progress-color=over #998c8c
+border-size=2
+border-radius=9
+padding=12
+margin=18
+font=JetBrainsMono Nerd Font 11
+default-timeout=5000
+max-visible=5
+
+[urgency=low]
+border-color=#b4aaa8
+default-timeout=3000
+
+[urgency=critical]
+border-color=#6a442f
+background-color=#998c8c
+text-color=#f9f3f1
+default-timeout=0
+
+[summary="本地系统消息服务"]
+invisible=1

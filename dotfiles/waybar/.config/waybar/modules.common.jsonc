@@ -1,0 +1,331 @@
+{
+  "custom/launcher": {
+    "format": "󰣛",
+    "on-click": "rofi -show drun",
+    "on-click-right": "bash ~/.config/waybar/scripts/toggle-left.sh",
+    "tooltip": false
+  },
+  "niri/workspaces": {
+    "format": "{icon}",
+    "format-icons": {
+      "default": " ",
+      "active": " ",
+      "focused": " "
+    },
+    "on-click": "activate"
+  },
+  "niri/window": {
+    "format": "󰖲 {title}",
+    "max-length": 30
+  },
+  "clock": {
+    "format": " {:%H:%M}",
+    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+  },
+  "cpu": {
+    "format": " {usage}%"
+  },
+  "custom/cpu": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 2,
+    "exec": "if [ -f ~/.cache/by-mgr/waybar_system_hidden ]; then echo '{\"text\":\"\",\"class\":\"hidden\"}'; else usage=$(grep 'cpu ' /proc/stat | awk '{usage=($2+$4)*100/($2+$4+$5)} END {printf \"%.0f\", usage}'); printf '{\"text\":\" %s%%\"}' \"$usage\"; fi",
+    "tooltip": true
+  },
+  "custom/memory": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 2,
+    "exec": "if [ -f ~/.cache/by-mgr/waybar_system_hidden ]; then echo '{\"text\":\"\",\"class\":\"hidden\"}'; else used=$(free -m | awk '/Mem:/{print $3}'); total=$(free -m | awk '/Mem:/{print $2}'); printf '{\"text\":\" %.1fG\",\"tooltip\":\"内存已用: %dMiB / %dMiB\"}' \"$(awk \"BEGIN{print $used/1024}\")\" \"$used\" \"$total\"; fi",
+    "on-click": "kitty --title 'System Monitor' btop",
+    "tooltip": true
+  },
+  "custom/network": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 2,
+    "exec": "if [ -f ~/.cache/by-mgr/waybar_system_hidden ]; then echo '{\"text\":\"\",\"class\":\"hidden\"}'; else echo '{\"text\":\"󰤨\",\"tooltip\":\"Network\"}'; fi",
+    "on-click": "kitty -e nmtui",
+    "tooltip": true
+  },
+  "custom/bluetooth": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 2,
+    "exec": "if [ -f ~/.cache/by-mgr/waybar_system_hidden ]; then echo '{\"text\":\"\",\"class\":\"hidden\"}'; elif bluetoothctl show 2>/dev/null | grep -q 'Powered: yes'; then echo '{\"text\":\"\"}'; else echo '{\"text\":\"󰂲\"}'; fi",
+    "on-click": "kcmshell6 kcm_bluetooth",
+    "tooltip": true
+  },
+  "memory": {
+    "interval": 5,
+    "format": " {used:0.1f}G",
+    "tooltip-format": "内存已用: {used}GiB / {total}GiB",
+    "on-click": "kitty --title 'System Monitor' btop",
+    "on-click-right": "pkill btop"
+  },
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": "󰝟 Muted",
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "on-click": "pavucontrol"
+  },
+  "bluetooth": {
+    "format": " {status}",
+    "format-disabled": "󰂲",
+    "format-connected": " {device_alias}",
+    "format-connected-battery": " {device_alias} {device_battery_percentage}%",
+    "tooltip-format": "{controller_alias}\t{controller_address}",
+    "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+    "on-click": "kcmshell6 kcm_bluetooth",
+    "on-click-right": "rfkill toggle bluetooth"
+  },
+  "network": {
+    "format-wifi": "{icon}",
+    "format-icons": [
+      "󰤥",
+      "󰤦",
+      "󰤧",
+      "󰤨"
+    ],
+    "format-ethernet": "󰈀",
+    "format-disconnected": "󰤮",
+    "tooltip-format": "{ifname} via {gwaddr} 󰊗",
+    "tooltip-format-wifi": "󰤨  {essid} ({signalStrength}%)",
+    "tooltip-format-ethernet": "󰈀  {ifname} ",
+    "tooltip-format-disconnected": "Disconnected ⚠",
+    "on-click": "kitty -e nmtui"
+  },
+  "battery": {
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": "󱐋 {capacity}%",
+    "format-plugged": "󱐋 {capacity}%",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  "custom/cava": {
+    "exec": "~/.config/waybar/scripts/cava.sh",
+    "format": "{}",
+    "tooltip": false,
+    "on-click": "bash ~/.config/waybar/scripts/toggle-music.sh",
+    "on-click-right": "bash ~/.config/waybar/scripts/toggle-lyric.sh"
+  },
+  "custom/power": {
+    "format": "⏻",
+    "on-click": "~/.config/rofi/scripts/powermenu.sh",
+    "on-click-right": "bash ~/.config/waybar/scripts/toggle-system.sh",
+    "tooltip": false
+  },
+  "custom/fcitx": {
+    "interval": 1,
+    "exec": "~/.config/waybar/scripts/fcitx_status.sh",
+    "on-click": "fcitx5-remote -s",
+    "on-click-right": "fcitx5-configtool",
+    "tooltip": false
+  },
+  "tray": {
+    "icon-size": 18,
+    "spacing": 6,
+    "show-passive-items": true
+  },
+  "custom/updates": {
+    "format": "{}",
+    "exec": "~/.config/waybar/scripts/check-updates.sh",
+    "return-type": "json",
+    "on-click": "kitty --hold sh -c 'sudo dnf upgrade && pkill -RTMIN+8 waybar'",
+    "on-click-right": "pkill -RTMIN+8 waybar",
+    "interval": 3600,
+    "signal": 8
+  },
+  "custom/weather": {
+    "format": "{}",
+    "tooltip": true,
+    "interval": 1800,
+    "signal": 10,
+    "exec": "~/.config/waybar/scripts/weather.py",
+    "return-type": "json",
+    "on-click": "kitty --hold curl wttr.in"
+  },
+  "custom/screenshot": {
+    "tooltip": "截图 (swappy 标注)",
+    "format": "{}",
+    "return-type": "json",
+    "interval": 1,
+    "exec": "if [ -f ~/.cache/by-mgr/waybar_left_hidden ]; then echo '{\"text\":\"\",\"class\":\"hidden\"}'; else echo '{\"text\":\"\",\"tooltip\":\"截图 (swappy 标注)\"}'; fi",
+    "on-click": "bash ~/.config/waybar/scripts/screenshot.sh",
+    "tooltip": false
+  },
+  "custom/picker": {
+    "tooltip": "取色器",
+    "format": "{}",
+    "return-type": "json",
+    "interval": 1,
+    "exec": "if [ -f ~/.cache/by-mgr/waybar_left_hidden ]; then echo '{\"text\":\"\",\"class\":\"hidden\"}'; else echo '{\"text\":\"\",\"tooltip\":\"取色器\"}'; fi",
+    "on-click": "bash ~/.config/waybar/scripts/pick-color.sh",
+    "tooltip": false
+  },
+  "custom/clipboard": {
+    "tooltip": "剪贴板",
+    "format": "{}",
+    "return-type": "json",
+    "interval": 1,
+    "exec": "if [ -f ~/.cache/by-mgr/waybar_left_hidden ]; then echo '{\"text\":\"\",\"class\":\"hidden\"}'; else echo '{\"text\":\"\",\"tooltip\":\"剪贴板\"}'; fi",
+    "on-click": "copyq toggle",
+    "on-click-right": "copyq eval \"clear()\" 2>/dev/null; notify-send \"剪贴板\" \"已清空\"",
+    "tooltip": false
+  },
+  "custom/mprev": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 1,
+    "exec": "if [ -f ~/.cache/by-mgr/waybar_music_hidden ]; then echo '{\"text\":\"\",\"class\":\"hidden\"}'; else echo '{\"text\":\"\"}'; fi",
+    "on-click": "playerctl previous",
+    "tooltip": false
+  },
+  "custom/mplay": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 1,
+    "exec": "if [ -f ~/.cache/by-mgr/waybar_music_hidden ]; then echo '{\"text\":\"\",\"class\":\"hidden\"}'; else playerctl status 2>/dev/null | grep -q Playing && echo '{\"text\":\"\"}' || echo '{\"text\":\"\"}'; fi",
+    "on-click": "playerctl play-pause",
+    "tooltip": false
+  },
+  "custom/mnext": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 1,
+    "exec": "if [ -f ~/.cache/by-mgr/waybar_music_hidden ]; then echo '{\"text\":\"\",\"class\":\"hidden\"}'; else echo '{\"text\":\"\"}'; fi",
+    "on-click": "playerctl next",
+    "tooltip": false
+  },
+  "custom/recorder": {
+    "tooltip": "录制视频",
+    "format": "{}",
+    "return-type": "json",
+    "interval": 1,
+    "signal": 9,
+    "exec": "if [ -f ~/.cache/by-mgr/waybar_left_hidden ]; then echo '{\"text\":\"\",\"class\":\"hidden\"}'; elif [ -f /tmp/recording_status ]; then echo '{\"text\":\"󰑊\",\"tooltip\":\"录制视频\",\"class\":\"recording\"}'; else echo '{\"text\":\"󰑊\",\"tooltip\":\"录制视频\",\"class\":\"stopped\"}'; fi",
+    "on-click": "~/.config/rofi/scripts/recorder.sh",
+    "on-click-right": "pkill -INT -f gpu-screen-recorder",
+    "tooltip": false
+  },
+  "custom/music": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 2,
+    "exec": "python3 ~/.config/waybar/scripts/music.py",
+    "on-click": "playerctl play-pause",
+    "on-click-right": "playerctl next",
+    "on-scroll-up": "playerctl volume 0.05+",
+    "on-scroll-down": "playerctl volume 0.05-",
+    "max-length": 15,
+    "tooltip": true,
+    "escape": true
+  },
+  "custom/brightness": {
+    "format": "{icon} {percentage}%",
+    "format-icons": [
+      "󰃞",
+      "󰃟",
+      "󰃠"
+    ],
+    "tooltip-format": "内接屏亮度 {percentage}%",
+    "return-type": "json",
+    "exec": "~/.config/waybar/scripts/brightness.sh",
+    "interval": 2,
+    "on-scroll-up": "~/.config/waybar/scripts/brightness.sh up",
+    "on-scroll-down": "~/.config/waybar/scripts/brightness.sh down",
+    "on-click": "~/.config/waybar/scripts/brightness.sh mid",
+    "tooltip": false
+  },
+  "custom/screen-power": {
+    "tooltip": "屏幕常亮",
+    "format": "{}",
+    "return-type": "json",
+    "interval": 1,
+    "exec": "if [ -f ~/.cache/by-mgr/waybar_left_hidden ]; then echo '{\"text\":\"\",\"class\":\"hidden\"}'; else ~/.config/waybar/scripts/screen.sh; fi",
+    "on-click": "bash ~/.config/waybar/scripts/screen.sh menu",
+    "tooltip": false
+  },
+  "custom/backlight": {
+    "format": "{icon} {percentage}%",
+    "format-icons": [
+      "󰃞",
+      "󰃟",
+      "󰃠"
+    ],
+    "tooltip-format": "外接屏亮度 {percentage}%",
+    "return-type": "json",
+    "exec": "sh -c 'val=$(ddcutil getvcp 10 --brief | awk \"{print \\$4}\"); echo \"{\\\"percentage\\\": $val}\"'",
+    "on-scroll-up": "ddcutil setvcp 10 + 10",
+    "on-scroll-down": "ddcutil setvcp 10 - 10",
+    "on-click": "ddcutil setvcp 10 50",
+    "interval": 30,
+    "tooltip": false
+  },
+  "custom/lyric": {
+    "format": "{}",
+    "return-type": "json",
+    "exec": "python3 ~/.config/waybar/scripts/lyric.py",
+    "interval": 1,
+    "max-length": 26,
+    "tooltip": true,
+    "escape": true
+  },
+  "custom/power-profiles": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 5,
+    "exec": "~/.config/waybar/scripts/powerprofiles.sh",
+    "on-click": "~/.config/waybar/scripts/powerprofiles.sh toggle",
+    "tooltip": true
+  },
+  "custom/inhibit": {
+    "format": "{}",
+    "return-type": "json",
+    "exec": "bash ~/.config/waybar/scripts/inhibit.sh",
+    "interval": 2,
+    "on-click": "bash ~/.config/waybar/scripts/inhibit.sh toggle",
+    "tooltip": false
+  },
+  "custom/gammastep": {
+    "tooltip": "护眼模式",
+    "format": "{}",
+    "return-type": "json",
+    "interval": 1,
+    "exec": "~/.config/waybar/scripts/gammastep.sh",
+    "on-click": "bash -c 'pkill gammastep && notify-send 护眼 已关闭 || (gammastep -O 4500 & notify-send 护眼 已开启)'",
+    "tooltip": true
+  },
+  "custom/theme": {
+    "tooltip": "昼夜主题",
+    "format": "{}",
+    "return-type": "json",
+    "interval": 1,
+    "exec": "if [ -f ~/.cache/by-mgr/waybar_left_hidden ]; then echo '{\"text\":\"\",\"class\":\"hidden\"}'; else bash ~/.config/waybar/scripts/auto-theme.sh; fi",
+    "signal": 12,
+    "on-click": "bash ~/.config/niri/scripts/toggle-theme.sh",
+    "tooltip": true
+  }
+}
